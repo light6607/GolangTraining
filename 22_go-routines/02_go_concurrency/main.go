@@ -1,10 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	go foo()
 	go bar()
+	// 如果不做等待，此处会直接返回。
+	time.Sleep(5 * time.Second)
 }
 
 func foo() {
