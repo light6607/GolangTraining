@@ -2,8 +2,10 @@ package main
 
 import "fmt"
 
-func main() {
-	switch "Mhi" {
+func switchFriends(name string) {
+	// golang中一旦switch命中就会直接退出，不会继续往下执行
+	// 如果想要往下执行需要使用fallthrough
+	switch name {
 	case "Daniel":
 		fmt.Println("Wassup Daniel")
 	case "Medhi":
@@ -13,6 +15,15 @@ func main() {
 	default:
 		fmt.Println("Have you no friends?")
 	}
+
+}
+
+func main() {
+
+	switchFriends("Daniel")
+	switchFriends("Medhi")
+	switchFriends("Jenny")
+	switchFriends("Sushant")
 }
 
 /*
