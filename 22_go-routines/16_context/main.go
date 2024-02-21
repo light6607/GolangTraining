@@ -42,13 +42,42 @@ LOOP:
 	wg.Done()
 }
 
-func main() {
-	ctx, cancel := context.WithCancel(context.Background())
-	wg.Add(1)
-	go worker(ctx)
-	time.Sleep(time.Second * 3)
-	cancel() // 通知子goroutine结束
-	wg.Wait()
-	fmt.Println("over")
+func getUser(ctx context.Context) {
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Println("获取到退出信号")
+			return
+		default:
+			userID := ctx.Value("userID")
+			fmt.Println("用户ID", userID)
+			time.Sleep(1 * time.Second)
+		}
+	}
+}
 
+func main() {
+	// ctx, cancel := context.WithCancel(context.Background())
+	// wg.Add(1)
+	// go worker(ctx)
+	// time.Sleep(time.Second * 3)
+	// cancel() // 通知子goroutine结束
+	// wg.Wait()
+	// fmt.Println("over")
+
+	ctx2, cancel := context.WithCancel(context.Background())
+	// context传值
+	wg.Add(1)
+	valCtx := context.WithValue(ctx2, "userID", 2)
+	go func() {
+		defer wg.Done()
+		getUser(valCtx)
+	}()
+	// wg.Wait()
+
+	time.Sleep(3 * time.Second)
+	cancel()
+
+	// 等待协程处理完毕才退出函数
+	wg.Wait()
 }
